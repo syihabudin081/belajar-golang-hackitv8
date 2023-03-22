@@ -52,40 +52,72 @@ func UpdateCar(ctx *gin.Context) {
 	}
 	if !condition {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error_status": "data not found",
-			"error_message": fmt.Sprintf("car with id %v not found",carID),
+			"error_status":  "data not found",
+			"error_message": fmt.Sprintf("car with id %v not found", carID),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"message" : fmt.Sprintf("car with id %v has succesfully updated",carID),
+		"message": fmt.Sprintf("car with id %v has succesfully updated", carID),
 	})
 }
 
-func GetCar(ctx *gin.Context){
-carID := ctx.Param("carID")
-condition := false
-var carData Car
+func DeleteCard(ctx *gin.Context) {
+	carID := ctx.Param("carID")
+	condition := false
 
-for i,car := range CarDatas{
-	if carID == car.CarID {
-		condition = true
-		carData = CarDatas[i]
-		break
+
+	for i, car := range CarDatas {
+		if carID == car.CarID {
+			condition = true
+			CarDatas = append(CarDatas[:i], CarDatas[i+1:]...)
+			break
+		}
 	}
-}
 
-if !condition {
-	ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-		"error_status" : "Data Not Found",
-		"error_message" : fmt.Sprintf("car with id %v not found", carID),
+	if !condition {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status":  "data not found",
+			"error_message": fmt.Sprintf("car with id %v not found", carID),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("car with id %v has succesfully deleted", carID),
 	})
-	return
+
 }
 
-ctx.JSON(http.StatusOK,gin.H{
-	"car" : carData,
-})
+func GetAllCars(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"cars": CarDatas,
+	})
+}
 
+func GetCarByID(ctx *gin.Context) {
+	carID := ctx.Param("carID")
+	condition := false
+	var carData Car
+
+	for i, car := range CarDatas {
+		if carID == car.CarID {
+			condition = true
+			carData = CarDatas[i]
+			break
+		}
+	}
+
+	if !condition {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status":  "Data Not Found",
+			"error_message": fmt.Sprintf("car with id %v not found", carID),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"car": carData,
+	})
 }
