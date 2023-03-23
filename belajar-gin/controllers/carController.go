@@ -63,7 +63,7 @@ func UpdateCar(ctx *gin.Context) {
 	})
 }
 
-func DeleteCard(ctx *gin.Context) {
+func DeleteCar(ctx *gin.Context) {
 	carID := ctx.Param("carID")
 	condition := false
 

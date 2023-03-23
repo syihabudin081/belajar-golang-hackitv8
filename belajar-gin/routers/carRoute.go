@@ -14,6 +14,6 @@ func StartServer() *gin.Engine {
 	router.PUT("/car/:carID", controllers.UpdateCar)
 	router.GET("/cars/", controllers.GetAllCars)
 	router.GET("/cars/:carID", controllers.GetCarByID)
-	
+	router.DELETE("/car/:carID",controllers.DeleteCar)
 	return router
 }
