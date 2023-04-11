@@ -76,3 +76,53 @@ func UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, Product)
 
 }
+
+
+func GetProductByID(c *gin.Context) {
+
+	db := database.GetDB()
+	userData := c.MustGet("userData").(jwt.MapClaims)
+	Product := models.Product{}
+
+	productId, _ := strconv.Atoi(c.Param("productId"))
+	userID := uint(userData["id"].(float64))
+
+
+	Product.UserID = userID
+	Product.ID = uint(productId)
+
+	err := db.Model(&Product).Where("id = ?", productId).First(&Product).Error
+	
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": "Bad Request",
+
+			"message": err.Error(),
+		})
+		return
+
+	}
+
+	c.JSON(http.StatusOK, Product)
+
+}
+
+
+func GetProductsByUserID(c *gin.Context) {
+	db := database.GetDB()
+	userData := c.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+	products := []models.Product{}
+
+	
+	err := db.Where("user_id = ?", userID).Find(&products).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad Request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, products)
+}

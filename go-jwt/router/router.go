@@ -21,6 +21,8 @@ func StartApp() *gin.Engine {
 		productRouter.Use(middlewares.Authentication())
 		productRouter.POST("/create",controllers.CreateProduct)
 		productRouter.PUT("/update/:productId",middlewares.ProductAuthorization(),controllers.UpdateProduct)
+		productRouter.GET("/get/:productId",middlewares.ProductAuthorization(),controllers.GetProductByID)
+		productRouter.GET("/get", controllers.GetProductsByUserID)
 	}
 
 	return r
