@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	
 	"go-jwt/database"
 	"go-jwt/models"
 	"net/http"
@@ -29,6 +30,13 @@ func ProductAuthorization() gin.HandlerFunc {
 		userData := c.MustGet("userData").(jwt.MapClaims)
 		userID := uint(userData["id"].(float64))
 		Product := models.Product{}
+		isAdmin := userData["admin"].(bool)
+		
+
+		if isAdmin {
+			c.Next()
+			return
+		}
 
 		err = db.Select("user_id").First(&Product, uint(productId)).Error
 
