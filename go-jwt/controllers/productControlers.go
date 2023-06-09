@@ -109,7 +109,7 @@ func GetProductByID(c *gin.Context) {
 }
 
 
-func GetProducts(c *gin.Context) {
+func GetProducts(c *gin.Context) {		
 	db := database.GetDB()
 	userData := c.MustGet("userData").(jwt.MapClaims)
 	userID := uint(userData["id"].(float64))
